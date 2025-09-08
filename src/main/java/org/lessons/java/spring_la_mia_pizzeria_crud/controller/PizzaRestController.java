@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.validation.Valid;
 
@@ -28,8 +30,16 @@ public class PizzaRestController {
 
     // INDEX
     @GetMapping
-    public List<Pizza> index() {
-        List<Pizza> pizzas = service.findAll();
+    public List<Pizza> index(@RequestParam(name = "name", required = false) String name) {
+        List<Pizza> pizzas;
+        if (name != null) {
+            pizzas = service.findByName(name);
+            if (pizzas.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            pizzas = service.findAll();
+        }
         return pizzas;
     }
 
