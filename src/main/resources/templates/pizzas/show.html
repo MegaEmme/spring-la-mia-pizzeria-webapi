@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/resources :: headTags}"></div>
+    <title>Pizza: [[${pizza.name}]]</title>
+</head>
+
+<body>
+    <nav th:replace="~{fragments/navbar :: navbar('Pizza Singola')}"></nav>
+    <main class="container p-4" th:object="${pizza}">
+        <div class="card shadow-lg p-0 mb-3">
+            <div class="row g-0">
+                <div class="col-md-5 p-2">
+                    <img th:src="*{imageUrl}" class="img-fluid rounded-start h-100 object-fit-cover" th:alt="*{name}">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h1 class="card-title">[[*{name}]]</h1>
+                        <p class="card-text text-muted">Ingredienti: [[*{description}]]</p>
+                        <hr />
+                        <h4 class="card-text text-end mt-4">Prezzo: [[*{price}]] €</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+
+        <th:block th:if="${pizza.ingredients.size() > 0}">
+            <h3 class="mb-2">Ingredienti:</h3>
+            <ul class="mb-3 ps-4">
+                <li th:each="ingredient : *{ingredients}" th:text="${ingredient.name}" />
+            </ul>
+        </th:block>
+        <th:block th:unless="${pizza.getIngredients().size() > 0}">
+            <p class="mb-3 alert alert-info">Questa pizza non ha ingredienti...</p>
+        </th:block>
+
+        <section class="row mb-3 special-offers">
+            <div class="col-12" th:unless="${pizza.getSpecialOffers().size>0}">
+                <div class="alert alert-warning">
+                    <h4>Non ci sono Offerte per il momento...</h4>
+                </div>
+            </div>
+            <div class="col-12" th:if="${pizza.getSpecialOffers().size>0}">
+                <div class="d-flex justify-content-between">
+                    <h2 class="fw-bold text-center">Lista offerte Speciali</h2>
+                    <td class="p-4 text-center"><a th:href="@{{id}/special-offers(id=${pizza.id})}"
+                            class="btn btn-warning">Crea offerta</a></td>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="mb-5">
+                            <th class="p-4 text-center">ID</th>
+                            <th class="p-4 text-center">Offerta</th>
+                            <th class="p-4 text-center">Data Inizio</th>
+                            <th class="p-4 text-center">Data Fine</th>
+                            <th></th>
+                            <th></th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="specialOffer : *{specialOffers}">
+                            <td class="p-4 text-center">[[${specialOffer.id}]]</td>
+                            <td class="p-4 text-center">[[${specialOffer.offerName}]]</td>
+                            <td class="p-4 text-center">[[${specialOffer.offerStartDate}]]</td>
+                            <td class="p-4 text-center" th:if="${specialOffer.offerEndDate} != null">
+                                [[${specialOffer.offerEndDate}]]</td>
+                            <td class="p-4 text-center" th:unless="${specialOffer.offerEndDate} != null">Data ancora da
+                                stabilire</td>
+                            <td class="p-4">
+                                <a th:href="@{/special-offers/edit/{id}(id = ${specialOffer.id})}"
+                                    class="btn btn-success btn-sm">Modifica</a>
+                            </td>
+                            <td class="p-4">
+
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                    th:data-bs-target="'#delete-modal-' + ${specialOffer.id}">
+                                    Elimina
+                                </button>
+
+                                <div class="modal fade" th:id="'delete-modal-' + ${specialOffer.id}" tabindex="-1"
+                                    aria-labelledby="delete-modal" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                                    Rimuovendo "[[${specialOffer.offerName}]]"
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Sei sicuro di voler rimuovere l'offerta speciale
+                                                <strong>"[[${specialOffer.offerName}]]"</strong>?
+                                            </div>
+                                            <div class="modal-footer">
+
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Chiudi</button>
+
+                                                <form class="d-inline-block"
+                                                    th:action="@{/special-offers/delete/{id}(id = ${specialOffer.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-danger">
+                                                        Elimina
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <div th:replace="~{fragments/resources :: scripts}"></div>
+</body>
+
+</html>

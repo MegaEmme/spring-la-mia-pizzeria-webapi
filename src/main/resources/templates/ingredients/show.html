@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/resources :: headTags}"></div>
+    <title>Ingredienti</title>
+</head>
+
+<body>
+    <nav th:replace="~{fragments/navbar :: navbar('Lista Ingredienti')}"></nav>
+
+    <main class="container p-4" th:object="${ingredient}">
+        <h1 class="text-center fw-bold mb-4">Ingrediente: "[[*{name}]]"</h1>
+        <div class="card shadow-lg p-0 mb-3">
+            <div class="row g-0">
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h1 class="card-title">[[*{name}]]</h1>
+                        <p class="mb-3">Pizze con questo ingrediente: [[*{pizzas.size()}]]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/resources :: scripts}"></div>
+</body>
+
+</html>

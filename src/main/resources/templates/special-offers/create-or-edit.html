@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/resources :: headTags}">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="~{fragments/navbar :: navbar('Offerte Speciali')}"></nav>
+    </header>
+    <main class="container">
+        <div class="row">
+            <div class="col-12">
+                <th:block>
+                    <h1 class="py-4 mb-2 text-center">Creazione Offerta Speciale per pizza:
+                        <br /><span class="fw-bold">"[[${specialOffer.pizza.name}]]"</span>
+                    </h1>
+                    <hr />
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <!-- FORM CREAZIONE NUOVA PIZZA  -->
+                            <form id="special-offer-form"
+                                th:action="${edit} ? @{/special-offers/edit/{id}(id=${specialOffer.id})} : @{/special-offers/create}"
+                                th:object="${specialOffer}" method="post">
+                                <!-- QUI NASCONDO I DATI DEL MIO LIBRO  -->
+                                <input type="hidden" th:field="*{pizza}" id="linked-specialOffer">
+                                <input type="hidden" th:field="*{id}">
+                                <!-- NOME  -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="offer-name">Nome Offerta:</label>
+                                    <input class="form-control" type="text" id="offer-name" th:field="*{offerName}"
+                                        th:errorClass="is-invalid">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('offerName')}">
+                                        <ul>
+                                            <li th:each="error : ${#fields.errors('offerName')}" th:text="${error}" />
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- DATA INIZIO  -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="offer-start-date">Data Inizio:</label>
+                                    <input class="form-control" type="date" id="offer-start-date"
+                                        th:field="*{offerStartDate}" th:errorclass="is-invalid"
+                                        th:value="${specialOffer.offerStartDate != null} ? ${#temporals.format(specialOffer.offerStartDate, 'yyyy-MM-dd')} : ''">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('offerStartDate')}">
+                                        <ul>
+                                            <li th:each="error : ${#fields.errors('offerStartDate')}"
+                                                th:text="${error}" />
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- DATA FINE  -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="offer-end-date">Data Fine:</label>
+                                    <input class="form-control" type="date" id="offer-end-date"
+                                        th:field="*{offerEndDate}" th:errorclass="is-invalid"
+                                        th:value="${specialOffer.offerEndDate != null} ? ${#temporals.format(specialOffer.offerEndDate, 'yyyy-MM-dd')} : ''">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('offerEndDate')}">
+                                        <ul>
+                                            <li th:each="error : ${#fields.errors('offerEndDate')}"
+                                                th:text="${error}" />
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- BOTTONI CREAZIONE E RESET  -->
+                                <div class="mb-3 d-flex justify-content-between">
+                                    <input type="submit" class="btn btn-primary" value="Salva">
+                                    <input type="reset" class="btn btn-warning" value="Resettare campi">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </th:block>
+            </div>
+        </div>
+    </main>
+    <div th:replace="~{fragments/resources :: scripts}"></div>
+</body>
+
+</html>
