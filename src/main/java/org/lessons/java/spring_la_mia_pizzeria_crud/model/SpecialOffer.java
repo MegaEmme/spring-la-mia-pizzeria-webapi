@@ -2,6 +2,8 @@ package org.lessons.java.spring_la_mia_pizzeria_crud.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,7 @@ public class SpecialOffer {
     @ManyToOne
     // MANY offerte dipendono da ONE pizza
     @JoinColumn(name = "pizza_id", nullable = false)
+    @JsonIgnore
     private Pizza pizza;
 
     @NotEmpty(message = "L''offerta deve avere un nome")
